@@ -7,6 +7,7 @@ Minimal agent skeleton for testing LangGraph persistence behavior before expandi
 - Thread-level checkpointing with `InMemorySaver`
 - Cross-thread memory with `InMemoryStore`
 - Optional OpenAI-backed response generation (opt-in per graph build)
+- Optional MCP-connected graph scaffold via `langchain-mcp-adapters`
 - A small graph with 3 nodes:
   - `load_memories`
   - `remember_fact`
@@ -56,6 +57,16 @@ If no key is set, it falls back to deterministic local response text.
 ```bash
 PYTHONPATH=src uv run --env-file .env pytest
 ```
+
+## MCP-connected graph demo (optional)
+
+Set MCP server variables in `.env` (see `.env.example`), then run:
+
+```bash
+PYTHONPATH=src uv run --env-file .env python -m persistence_agent.mcp_demo
+```
+
+This uses the LangChain docs pattern (`MultiServerMCPClient`) to load MCP tools and build a LangGraph react agent.
 
 ## Notes
 
