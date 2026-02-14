@@ -1,3 +1,13 @@
+Metadata-Version: 2.4
+Name: langgraph-persistence-skeleton
+Version: 0.1.0
+Summary: Skeleton LangGraph agent with persistence primitives
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: langgraph>=0.6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.2; extra == "dev"
+
 # LangGraph Persistence Skeleton
 
 Minimal agent skeleton for testing LangGraph persistence behavior before expanding into a full implementation.
