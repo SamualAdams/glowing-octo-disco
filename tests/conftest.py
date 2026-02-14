@@ -21,10 +21,7 @@ def _database_url() -> str:
     pg_database = os.getenv("PGDATABASE", "app")
     pg_user = os.getenv("PGUSER", "app")
     pg_password = os.getenv("PGPASSWORD", "app")
-    return os.getenv(
-        "DATABASE_URL",
-        f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}",
-    )
+    return f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}"
 
 
 def _run_docker_compose(args: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -83,12 +80,12 @@ def postgres_database_url() -> Iterator[str]:
         _wait_for_database(database_url)
     except TimeoutError as error:
         logs = _run_docker_compose(["logs", "postgres"], check=False)
-        _run_docker_compose(["down", "-v", "--remove-orphans"], check=False)
+        _run_docker_compose(["down", "--remove-orphans"], check=False)
         pytest.fail(f"{error}\nDocker logs:\n{logs.stdout}\n{logs.stderr}")
 
     yield database_url
 
-    _run_docker_compose(["down", "-v", "--remove-orphans"], check=False)
+    _run_docker_compose(["down", "--remove-orphans"], check=False)
 
 
 @pytest.fixture()
