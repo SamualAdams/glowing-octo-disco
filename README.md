@@ -23,6 +23,12 @@ Minimal agent skeleton for testing LangGraph persistence behavior before expandi
 uv sync --extra dev
 ```
 
+## Install (pip fallback)
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
 ## Run the demo (uv)
 
 ```bash
