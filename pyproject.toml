@@ -15,7 +15,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.2"
+  "psycopg[binary]>=3.2",
+  "pytest>=8.2",
 ]
 
 [tool.setuptools.packages.find]

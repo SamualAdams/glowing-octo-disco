@@ -77,6 +77,10 @@ packaging==26.0
     #   pytest
 pluggy==1.6.0
     # via pytest
+psycopg==3.3.2
+    # via langgraph-persistence-skeleton
+psycopg-binary==3.3.2 ; implementation_name != 'pypy'
+    # via psycopg
 pydantic==2.12.5
     # via
     #   langchain-core
@@ -112,12 +116,15 @@ typing-extensions==4.15.0
     # via
     #   anyio
     #   langchain-core
+    #   psycopg
     #   openai
     #   pydantic
     #   pydantic-core
     #   typing-inspection
 typing-inspection==0.4.2
     # via pydantic
+tzdata==2025.3 ; sys_platform == 'win32'
+    # via psycopg
 urllib3==2.6.3
     # via requests
 uuid-utils==0.14.0
