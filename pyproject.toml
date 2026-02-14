@@ -9,7 +9,8 @@ description = "Skeleton LangGraph agent with persistence primitives"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "langgraph>=0.6.0"
+  "langgraph>=0.6.0",
+  "langchain-openai>=1.1.9",
 ]
 
 [project.optional-dependencies]
@@ -23,3 +24,6 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+markers = [
+  "integration: tests that call external services such as the OpenAI API",
+]
