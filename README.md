@@ -6,16 +6,16 @@ Minimal agent skeleton for testing LangGraph persistence behavior before expandi
 
 - Thread-level checkpointing with `InMemorySaver`
 - Cross-thread memory with `InMemoryStore`
-- A small graph with 3 nodes:
-  - `load_memories`
+- An LLM-backed ReAct agent loop (OpenAI chat model)
+- Tool-based memory operations:
   - `remember_fact`
-  - `respond`
+  - `search_memories`
 - Helpers for:
-  - `get_state`
-  - `get_state_history`
+  - `get_state` / `latest_state`
+  - `get_state_history` / `state_history`
   - replay from `checkpoint_id`
   - `update_state` forks
-- Pytest coverage for core persistence flows
+- Integration tests for OpenAI connectivity + persistence flows
 
 ## Install (uv)
 
@@ -37,8 +37,9 @@ cp .env.example .env
 
 Set your credentials in `.env`:
 
-- `OPENAI_API_KEY` for model access
+- `PERSISTENCE_AGENT_OPENAI_API_KEY` for model access
 - optional `OPENAI_MODEL` override
+- optional `OPENAI_TIMEOUT_SECONDS` override
 - optional LangSmith variables for tracing
 
 ## Run the demo (uv)
