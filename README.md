@@ -17,22 +17,22 @@ Minimal agent skeleton for testing LangGraph persistence behavior before expandi
   - `update_state` forks
 - Pytest coverage for core persistence flows
 
-## Install
+## Install (uv)
 
 ```bash
-python3 -m pip install -e '.[dev]'
+uv sync --extra dev
 ```
 
-## Run the demo
+## Run the demo (uv)
 
 ```bash
-python3 -m persistence_agent.demo
+uv run python -m persistence_agent.demo
 ```
 
-## Run tests
+## Run tests (uv)
 
 ```bash
-pytest
+uv run pytest
 ```
 
 ## Notes
