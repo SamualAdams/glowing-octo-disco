@@ -37,7 +37,7 @@ cp .env.example .env
 
 Set your credentials in `.env`:
 
-- `OPENAI_API_KEY` for model access
+- `PERSISTENCE_AGENT_OPENAI_API_KEY` for model access
 - optional `OPENAI_MODEL` override
 - optional LangSmith variables for tracing
 
