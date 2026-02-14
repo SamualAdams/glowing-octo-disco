@@ -23,6 +23,10 @@ Minimal agent skeleton for testing LangGraph persistence behavior before expandi
 uv sync --extra dev
 ```
 
+## Docker prerequisite
+
+Install and run Docker Desktop (or another Docker daemon) before running tests. The test suite now starts and stops a local Postgres container automatically.
+
 ## Install (pip fallback)
 
 ```bash
@@ -39,6 +43,13 @@ Set your credentials in `.env`:
 
 - `OPENAI_API_KEY` for model access
 - optional `OPENAI_MODEL` override
+- local Postgres defaults:
+  - `DATABASE_URL=postgresql://app:app@127.0.0.1:5442/app`
+  - `PGHOST=127.0.0.1`
+  - `PGPORT=5442`
+  - `PGDATABASE=app`
+  - `PGUSER=app`
+  - `PGPASSWORD=app`
 - optional LangSmith variables for tracing
 
 ## Run the demo (uv)
@@ -52,6 +63,10 @@ PYTHONPATH=src uv run --env-file .env python -m persistence_agent.demo
 ```bash
 PYTHONPATH=src uv run --env-file .env pytest
 ```
+
+`pytest` brings up `postgres` via Docker Compose at session start, waits for readiness, runs DB connectivity tests, and tears the container down at session end.
+
+If tests fail with Docker daemon errors, start Docker Desktop and rerun.
 
 ## Notes
 
