@@ -11,6 +11,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.runtime import Runtime
 from langgraph.store.memory import InMemoryStore
 from typing_extensions import NotRequired, TypedDict
+from .openai_llm import LLMResponder, build_openai_responder_from_env
 
 
 class AgentState(TypedDict):
@@ -78,6 +79,34 @@ def remember_fact(state: AgentState, runtime: Runtime[AgentContext]) -> dict[str
     }
 
 
+def _fallback_response(state: AgentState, memory_summary: str) -> str:
+    return f"You said: {state['user_message']}\nMemory: {memory_summary}"
+
+
+def make_respond_node(llm_responder: LLMResponder | None):
+    def respond(state: AgentState) -> dict[str, Any]:
+        memory_hits = list(state.get("memory_hits", []))
+        stored_fact = state.get("stored_fact")
+        if stored_fact and stored_fact not in memory_hits:
+            memory_hits.append(stored_fact)
+
+        memory_summary = " | ".join(memory_hits) or "no prior memory"
+        if llm_responder is None:
+            response = _fallback_response(state, memory_summary)
+        else:
+            try:
+                response = llm_responder(
+                    user_message=state["user_message"],
+                    memory_summary=memory_summary,
+                )
+            except Exception as exc:  # pragma: no cover - defensive fallback
+                response = f"{_fallback_response(state, memory_summary)}\n(LLM unavailable: {exc.__class__.__name__})"
+
+        return {"response": response, "timeline": ["responded"]}
+
+    return respond
+
+
 def respond(state: AgentState) -> dict[str, Any]:
     memory_hits = list(state.get("memory_hits", []))
     stored_fact = state.get("stored_fact")
@@ -86,19 +115,28 @@ def respond(state: AgentState) -> dict[str, Any]:
 
     memory_summary = " | ".join(memory_hits) or "no prior memory"
     return {
-        "response": f"You said: {state['user_message']}\nMemory: {memory_summary}",
+        "response": _fallback_response(state, memory_summary),
         "timeline": ["responded"],
     }
 
 
-def build_graph(*, checkpointer: InMemorySaver | None = None, store: InMemoryStore | None = None):
+def build_graph(
+    *,
+    checkpointer: InMemorySaver | None = None,
+    store: InMemoryStore | None = None,
+    llm_responder: LLMResponder | None = None,
+    use_openai_from_env: bool = False,
+):
     saver = checkpointer or InMemorySaver()
     memory_store = store or InMemoryStore()
+    effective_llm = llm_responder
+    if effective_llm is None and use_openai_from_env:
+        effective_llm = build_openai_responder_from_env()
 
     builder = StateGraph(AgentState, context_schema=AgentContext)
     builder.add_node("load_memories", load_memories)
     builder.add_node("remember_fact", remember_fact)
-    builder.add_node("respond", respond)
+    builder.add_node("respond", make_respond_node(effective_llm))
 
     builder.add_edge(START, "load_memories")
     builder.add_edge("load_memories", "remember_fact")

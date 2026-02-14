@@ -6,6 +6,7 @@ Minimal agent skeleton for testing LangGraph persistence behavior before expandi
 
 - Thread-level checkpointing with `InMemorySaver`
 - Cross-thread memory with `InMemoryStore`
+- Optional OpenAI-backed response generation (opt-in per graph build)
 - A small graph with 3 nodes:
   - `load_memories`
   - `remember_fact`
@@ -46,6 +47,9 @@ Set your credentials in `.env`:
 ```bash
 PYTHONPATH=src uv run --env-file .env python -m persistence_agent.demo
 ```
+
+`demo.py` now builds the graph with `use_openai_from_env=True`, so if `OPENAI_API_KEY` is set it will use OpenAI for the `respond` node.
+If no key is set, it falls back to deterministic local response text.
 
 ## Run tests (uv)
 

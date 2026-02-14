@@ -4,7 +4,7 @@ from persistence_agent.agent import AgentContext, build_graph, edit_state, run_t
 
 
 def main() -> None:
-    graph, _, _ = build_graph()
+    graph, _, _ = build_graph(use_openai_from_env=True)
 
     print("== Thread 1: initial turn ==")
     first = run_turn(graph, thread_id="thread-1", user_id="user-1", message="my name is Jon")

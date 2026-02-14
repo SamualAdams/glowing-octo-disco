@@ -44,3 +44,13 @@ def test_replay_and_update_state_create_forks() -> None:
     )
     forked = graph.invoke(None, config=new_config, context=AgentContext(user_id="u-1"))
     assert "ramen" in forked["response"]
+
+
+def test_injected_llm_responder_is_used() -> None:
+    def fake_llm(*, user_message: str, memory_summary: str) -> str:
+        return f"LLM::{user_message}::{memory_summary}"
+
+    graph, _, _ = build_graph(llm_responder=fake_llm)
+    output = run_turn(graph, thread_id="t-llm", user_id="u-1", message="my name is Jon")
+
+    assert output["response"].startswith("LLM::my name is Jon::")
