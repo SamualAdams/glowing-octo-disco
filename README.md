@@ -29,16 +29,28 @@ uv sync --extra dev
 python3 -m pip install -r requirements.txt
 ```
 
+## Environment variables
+
+```bash
+cp .env.example .env
+```
+
+Set your credentials in `.env`:
+
+- `OPENAI_API_KEY` for model access
+- optional `OPENAI_MODEL` override
+- optional LangSmith variables for tracing
+
 ## Run the demo (uv)
 
 ```bash
-uv run python -m persistence_agent.demo
+PYTHONPATH=src uv run --env-file .env python -m persistence_agent.demo
 ```
 
 ## Run tests (uv)
 
 ```bash
-uv run pytest
+PYTHONPATH=src uv run --env-file .env pytest
 ```
 
 ## Notes
