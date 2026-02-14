@@ -1,20 +1,58 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# LangGraph Persistence Skeleton
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+Minimal agent skeleton for testing LangGraph persistence behavior before expanding into a full implementation.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## What this includes
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+- Thread-level checkpointing with `InMemorySaver`
+- Cross-thread memory with `InMemoryStore`
+- A small graph with 3 nodes:
+  - `load_memories`
+  - `remember_fact`
+  - `respond`
+- Helpers for:
+  - `get_state`
+  - `get_state_history`
+  - replay from `checkpoint_id`
+  - `update_state` forks
+- Pytest coverage for core persistence flows
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)# glowing-octo-disco
+## Install (uv)
+
+```bash
+uv sync --extra dev
+```
+
+## Install (pip fallback)
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+## Environment variables
+
+```bash
+cp .env.example .env
+```
+
+Set your credentials in `.env`:
+
+- `OPENAI_API_KEY` for model access
+- optional `OPENAI_MODEL` override
+- optional LangSmith variables for tracing
+
+## Run the demo (uv)
+
+```bash
+PYTHONPATH=src uv run --env-file .env python -m persistence_agent.demo
+```
+
+## Run tests (uv)
+
+```bash
+PYTHONPATH=src uv run --env-file .env pytest
+```
+
+## Notes
+
+This is intentionally a skeleton for pairing and PR review. It uses in-memory checkpoint/store implementations for local iteration only.
